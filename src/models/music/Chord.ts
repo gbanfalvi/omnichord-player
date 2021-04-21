@@ -28,7 +28,7 @@ export class Chord {
 
     /** Given a root key and an octave, notes to press on a chord (will be root key & offsets). */
     notes(key: Key, octave: Octave): Note[] {
-        return octave.filter((_val, idx) => {
+        return Octave.notesFromOctave(octave).filter((_val, idx) => {
             return idx == key.octaveRootIdx || 
                 this.idxOffsets.map(ofs => {return key.octaveRootIdx + ofs}).includes(idx)
         })

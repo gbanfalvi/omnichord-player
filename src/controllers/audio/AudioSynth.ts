@@ -1,11 +1,12 @@
 import * as Tone from 'tone'
+import { PulseOscillatorOptions } from 'tone'
 import { Note } from '../../models/music/Note'
 
 /**
  * AudioSynth
  * 
- * Combination of several synths (with their respective oscillators) to be able
- * to mess with the sound.
+ * Actual instrument playing sounds. It's a combination of several synths (with 
+ * their respective oscillators) mixed together with crossfaders.
  * 
  * Sine -----\
  *            |---\
@@ -16,41 +17,50 @@ import { Note } from '../../models/music/Note'
  */
 export class AudioSynth {
 
-    private _triangleSynth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: 'triangle', partialCount: 0, phase: 0 },
-            envelope: {
-                attack: 0.01, attackCurve: 'linear',
-                decay: 0.1, decayCurve: 'exponential',
-                sustain: 0.3,
-                release: 1, releaseCurve: 'exponential'
-            }
-        })
-
     private _sineSynth = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: "sine", partialCount: 0, phase: 0 },
+        oscillator: { type: 'sine' },
         envelope: {
-            attack: 0.0, attackCurve: 'linear',
+            attack: 0.01, attackCurve: 'linear',
             decay: 0.1, decayCurve: 'exponential',
             sustain: 0.5,
+            release: 2, releaseCurve: 'exponential'
+        },
+        volume: -8
+    })
+
+    private _triangleSynth = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: 'triangle' },
+        envelope: {
+            attack: 0.01, attackCurve: 'linear',
+            decay: 0.1, decayCurve: 'exponential',
+            sustain: 0.2,
             release: 1, releaseCurve: 'exponential'
-        }
-    }).toDestination()
+        },
+    })
 
     private _triangleSineCrossfade = new Tone.CrossFade()
 
-    private _squareSynth = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "pulse" } })
+    private _squareSynth = new Tone.PolySynth(Tone.Synth,
+        {
+            oscillator: { type: "pulse", width: 0 },
+            envelope: {
+                attack: 0.05, attackCurve: 'linear',
+                decay: 0.1, decayCurve: 'exponential',
+                sustain: 0.2,
+                release: 1, releaseCurve: 'exponential'
+            },
+            volume: -4
 
-    private _squareCrossfade = new Tone.CrossFade()
+        })
+
+    private _squareCrossfade = new Tone.CrossFade().toDestination()
 
     constructor() {
         this._triangleSynth.connect(this._triangleSineCrossfade.a)
         this._sineSynth.connect(this._triangleSineCrossfade.b)
+
         this._triangleSineCrossfade.connect(this._squareCrossfade.a)
         this._squareSynth.connect(this._squareCrossfade.b)
-
-
-        this.triangleSineFade = 0
-        this.squareFade = 0
     }
 
     get triangleSineFade(): number {
@@ -69,8 +79,16 @@ export class AudioSynth {
         this._squareCrossfade.fade.value = val
     }
 
+    get squareWidth(): number {
+        return (this._squareSynth.get().oscillator as PulseOscillatorOptions).width
+    }
+
+    set squareWidth(newValue: number) {
+        this._squareSynth.set({ oscillator: { width: newValue } })
+    }
+
     playNotes(notes: Note[]) {
-        this._triangleSynth.triggerAttack(notes, 0.1)
+        this._triangleSynth.triggerAttack(notes)
         this._sineSynth.triggerAttack(notes)
         this._squareSynth.triggerAttack(notes)
     }
