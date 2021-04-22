@@ -55,7 +55,15 @@ yarn build
 Builds the whole thing into `./dev`.
 
 ## Codebase Structure
-Nothing very good lol I'm not a web developer. 
+Nothing very good lol I'm not a web developer.
+ 
+- `/controllers` - Has key classes that do some form of computation away from the UI layer.
+- `/models` - Key app data structures. 
+- `/view-models` - Contain business logic and/or state that's between the views and controllers.
+- `/views` - The (p)react app itself. 
+    - `/App.tsx` - Root component for the application.
+- `/index.html` - Main app entrypoint.
+- `/index.tsx` - Renders the app component.
 
 ## Project Checklist
 
@@ -71,8 +79,11 @@ Nothing very good lol I'm not a web developer.
         - [ ] Make it smoother (one chord stops ebefore playing the next one).
     - [ ] Silence shortcut. 
     - [ ] Play chord inversions?
+
 - [ ] Strumboard.
     - [ ] Figure out notes in key.
+
+- [ ] Rhythmboard (? terrible name)
 
 - [x] Chordboard controls.
     - [x] Octave switch.
