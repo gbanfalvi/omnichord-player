@@ -17,8 +17,16 @@ export function ContRangeWidget(props: ContRangeWidgetProps) {
 
     return <div className='ContRangeWidget'>
         <div className='RangeLabel'>{props.contRangeWidget.minValue}</div>
-        <input className='RangeInput' type='range' value={props.contRangeWidget.value} min={props.contRangeWidget.minValue} max={props.contRangeWidget.maxValue} onInput={e=>{onValueChange(parseFloat(e.currentTarget.value))}}/>
-        <div className='ValueLabel'>{props.contRangeWidget.value}</div>
+        <input 
+        className='RangeInput' 
+        type='range' 
+        value={props.contRangeWidget.value} 
+        min={props.contRangeWidget.minValue} 
+        max={props.contRangeWidget.maxValue} 
+        step={props.contRangeWidget.accuracy}
+        onInput={e=>{onValueChange(parseFloat(e.currentTarget.value))}}
+        />
+        <div className='ValueLabel'>{Math.round(props.contRangeWidget.value*1000)/1000}</div>
         <div className='RangeLabel'>{props.contRangeWidget.maxValue}</div>
     </div>
 }

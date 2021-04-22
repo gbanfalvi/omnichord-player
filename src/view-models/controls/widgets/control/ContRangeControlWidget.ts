@@ -5,12 +5,14 @@ export class ContRangeControlWidget<I, K extends keyof I> extends BaseControlWid
 
     readonly minValue: I[K]
     readonly maxValue: I[K]
+    accuracy: number
     type = WidgetType.continuousRange
 
-    constructor(instrument: I, key: K, title: string | null, minValue: I[K], maxValue: I[K]) {
+    constructor(instrument: I, key: K, title: string | null, minValue: I[K], maxValue: I[K], accuracy: number) {
         super(instrument, key, title)
         this.minValue = minValue
         this.maxValue = maxValue
+        this.accuracy = accuracy
     }
 
 }

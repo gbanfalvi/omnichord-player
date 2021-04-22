@@ -18,28 +18,28 @@
         }
 
         .AbstractWidget {
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: stretch;
             padding: 2px;
-
+            flex-grow: 1;
+                
             .ContainerWidget {
                 display: flex;
-
+                
                 &.horizontal {
+                    display: flex;
                     flex-flow: row nowrap;
-                    align-items: flex-end;
+                    align-items:  flex-end;
 
                     & > *:not(:first-child) {
-                        margin-left: 8px;
+                        margin-left: 12px;
                     }
                 }
 
                 &.vertical {
+                    display: flex;
                     flex-flow: column nowrap;
 
                     & > *:not(:first-child) {
-                        margin-top: 2px;
+                        margin-top: 8px;
                     }
                 }
             }
@@ -53,6 +53,7 @@
                 display: flex;
                 flex-flow: row nowrap;
                 align-items: center;
+                justify-content: center;
 
                 .RangeChange {
                     padding: 6px 8px;
@@ -84,6 +85,9 @@
             }
 
             .ToggleWidget {
+
+                text-align: center;
+
                 .StateChange {
                     width: 42px;
                     text-align: center;
@@ -126,6 +130,8 @@
                 .RangeLabel,
                 .ValueLabel {
                     font-size: 14px;
+                    width: 32px;
+                    text-align: center;
                 }
 
                 .RangeLabel {

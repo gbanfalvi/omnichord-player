@@ -49,11 +49,13 @@ export class AudioSynth {
                 sustain: 0.2,
                 release: 1, releaseCurve: 'exponential'
             },
-            volume: -4
+            volume: -8
 
         })
 
-    private _squareCrossfade = new Tone.CrossFade().toDestination()
+    private _squareCrossfade = new Tone.CrossFade()
+
+    private _vibrato = new Tone.Vibrato().toDestination()
 
     constructor() {
         this._triangleSynth.connect(this._triangleSineCrossfade.a)
@@ -61,7 +63,11 @@ export class AudioSynth {
 
         this._triangleSineCrossfade.connect(this._squareCrossfade.a)
         this._squareSynth.connect(this._squareCrossfade.b)
+
+        this._squareCrossfade.connect(this._vibrato)
     }
+
+    // -------------------------------------------------------------------------
 
     get triangleSineFade(): number {
         return this._triangleSineCrossfade.fade.value
@@ -71,6 +77,8 @@ export class AudioSynth {
         this._triangleSineCrossfade.fade.value = val
     }
 
+    // -------------------------------------------------------------------------
+
     get squareFade(): number {
         return this._squareCrossfade.fade.value
     }
@@ -79,6 +87,8 @@ export class AudioSynth {
         this._squareCrossfade.fade.value = val
     }
 
+    // -------------------------------------------------------------------------
+
     get squareWidth(): number {
         return (this._squareSynth.get().oscillator as PulseOscillatorOptions).width
     }
@@ -86,6 +96,28 @@ export class AudioSynth {
     set squareWidth(newValue: number) {
         this._squareSynth.set({ oscillator: { width: newValue } })
     }
+
+    // -------------------------------------------------------------------------
+
+    get vibratoFreq(): number {
+        return this._vibrato.frequency.value as number
+    }
+
+    set vibratoFreq(newValue: number) {
+        this._vibrato.frequency.value = newValue
+    }
+
+    // -------------------------------------------------------------------------
+
+    get vibratoDepth(): number {
+        return this._vibrato.depth.value
+    }
+
+    set vibratoDepth(newValue: number) {
+        this._vibrato.depth.value = newValue
+    }
+
+    // -------------------------------------------------------------------------
 
     playNotes(notes: Note[]) {
         this._triangleSynth.triggerAttack(notes)
