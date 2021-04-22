@@ -1,5 +1,4 @@
 import { h } from 'preact'
-import { AudioController } from '../controllers/audio/AudioController'
 import { ChordNoteController } from '../controllers/notes/ChordNoteContoller'
 import { StrumNoteController } from '../controllers/notes/StrumNoteController'
 import { Controls } from './controls/Controls'
@@ -10,9 +9,8 @@ import { AudioSynth } from '../controllers/audio/AudioSynth'
 
 export function App() {
 
-    const audioController = new AudioController()
     const chordNoteController = new ChordNoteController(new AudioSynth())
-    const strumNoteController = new StrumNoteController(audioController)
+    const strumNoteController = new StrumNoteController()
 
     return <div className='App'>
         <Controls chordNoteController={chordNoteController} strumNoteController={strumNoteController}/>

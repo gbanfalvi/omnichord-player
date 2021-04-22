@@ -10,7 +10,6 @@ import { ContainerArrangement, ContainerControlWidget } from "../../view-models/
 import { ContRangeControlWidget } from "../../view-models/controls/widgets/control/ContRangeControlWidget"
 import { DiscRangeControlWidget } from "../../view-models/controls/widgets/control/DiscRangeControlWidget"
 import { ToggleControlWidget } from "../../view-models/controls/widgets/control/ToggleControlWidget"
-import { AudioController } from '../audio/AudioController'
 import { AudioSynth } from '../audio/AudioSynth'
 
 type ChordKeyAndOctave = { chord: Chord, key: Key, octave: Octave }
