@@ -5,6 +5,7 @@ import { StrumNoteController } from '../controllers/notes/StrumNoteController'
 import { Controls } from './controls/Controls'
 import { Instruments } from './instruments/Instruments'
 
+import './App.scss'
 
 export function App() {
 
@@ -13,7 +14,7 @@ export function App() {
     const strumNoteController = new StrumNoteController(audioController)
 
     return <div className='App'>
+        <Controls chordNoteController={chordNoteController} strumNoteController={strumNoteController}/>
         <Instruments chordNoteController={chordNoteController} strumNoteController={strumNoteController} />
-        <Controls />
     </div>
 }

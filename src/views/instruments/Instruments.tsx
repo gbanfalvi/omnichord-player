@@ -4,6 +4,8 @@ import { StrumNoteController } from '../../controllers/notes/StrumNoteController
 import { Chordboard } from './chordboard/Chordboard'
 import { Strumboard } from './strumboard/Strumboard'
 
+import './Instruments.scss'
+
 interface InstrumentsProps {
     chordNoteController: ChordNoteController,
     strumNoteController: StrumNoteController
