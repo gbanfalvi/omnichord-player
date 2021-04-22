@@ -6,11 +6,12 @@ import { Controls } from './controls/Controls'
 import { Instruments } from './instruments/Instruments'
 
 import './App.scss'
+import { AudioSynth } from '../controllers/audio/AudioSynth'
 
 export function App() {
 
     const audioController = new AudioController()
-    const chordNoteController = new ChordNoteController(audioController)
+    const chordNoteController = new ChordNoteController(new AudioSynth())
     const strumNoteController = new StrumNoteController(audioController)
 
     return <div className='App'>

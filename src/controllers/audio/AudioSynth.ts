@@ -1,6 +1,13 @@
 import * as Tone from 'tone'
 import { PulseOscillatorOptions } from 'tone'
+import { Arp } from '../../models/music/Arp'
 import { Note } from '../../models/music/Note'
+
+export type ArpConfiguration = {
+    mode: Arp.Mode,
+    speed: Arp.Speed,
+    loop: boolean
+}
 
 /**
  * AudioSynth
@@ -20,10 +27,10 @@ export class AudioSynth {
     private _sineSynth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: 'sine' },
         envelope: {
-            attack: 0.01, attackCurve: 'linear',
+            attack: 0.02, attackCurve: 'linear',
             decay: 0.1, decayCurve: 'exponential',
             sustain: 0.5,
-            release: 2, releaseCurve: 'exponential'
+            release: 0.5, releaseCurve: 'exponential'
         },
         volume: -8
     })
@@ -34,7 +41,7 @@ export class AudioSynth {
             attack: 0.01, attackCurve: 'linear',
             decay: 0.1, decayCurve: 'exponential',
             sustain: 0.2,
-            release: 1, releaseCurve: 'exponential'
+            release: 0.5, releaseCurve: 'exponential'
         },
     })
 
@@ -47,15 +54,17 @@ export class AudioSynth {
                 attack: 0.05, attackCurve: 'linear',
                 decay: 0.1, decayCurve: 'exponential',
                 sustain: 0.2,
-                release: 1, releaseCurve: 'exponential'
+                release: 0.5, releaseCurve: 'exponential'
             },
-            volume: -8
+            volume: -16
 
         })
 
     private _squareCrossfade = new Tone.CrossFade()
 
     private _vibrato = new Tone.Vibrato().toDestination()
+
+    private _pattern: Tone.Pattern<string> | null = null
 
     constructor() {
         this._triangleSynth.connect(this._triangleSineCrossfade.a)
@@ -119,16 +128,52 @@ export class AudioSynth {
 
     // -------------------------------------------------------------------------
 
-    playNotes(notes: Note[]) {
-        this._triangleSynth.triggerAttack(notes)
-        this._sineSynth.triggerAttack(notes)
-        this._squareSynth.triggerAttack(notes)
+    playNotes(notes: Note[], arp: ArpConfiguration) {
+        if (arp.mode === Arp.Mode.none) {
+            this._triangleSynth.triggerAttack(notes)
+            this._sineSynth.triggerAttack(notes)
+            this._squareSynth.triggerAttack(notes)
+
+        } else {
+            Tone.start()
+            Tone.Transport.start()
+
+            const duration = Arp.noteLength(arp.speed)
+
+            if (arp.loop) {
+                this._pattern = new Tone.Pattern((time, note) => {
+                    this._triangleSynth.triggerAttackRelease(note, duration)
+                    this._sineSynth.triggerAttackRelease(note, duration)
+                    this._squareSynth.triggerAttackRelease(note, duration)
+                }, notes, arp.mode)
+
+            } else {
+                this._pattern = new Tone.Pattern((time, note) => {
+                    this._triangleSynth.triggerAttack(note)
+                    this._sineSynth.triggerAttack(note)
+                    this._squareSynth.triggerAttack(note)
+                }, notes, arp.mode)
+
+                this._pattern.iterations = notes.length
+            }
+
+            this._pattern.interval = duration
+            this._pattern.start()
+        }
     }
 
     releaseNotes(notes: Note[]) {
+
+        if (this._pattern !== null) {
+            this._pattern.stop()
+            this._pattern = null
+        }
+
         this._triangleSynth.triggerRelease(notes)
         this._sineSynth.triggerRelease(notes)
         this._squareSynth.triggerRelease(notes)
+
     }
+
 
 }

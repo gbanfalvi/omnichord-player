@@ -11,6 +11,7 @@ import { ContRangeControlWidget } from "../../view-models/controls/widgets/contr
 import { DiscRangeControlWidget } from "../../view-models/controls/widgets/control/DiscRangeControlWidget"
 import { ToggleControlWidget } from "../../view-models/controls/widgets/control/ToggleControlWidget"
 import { AudioController } from '../audio/AudioController'
+import { AudioSynth } from '../audio/AudioSynth'
 
 type ChordKeyAndOctave = { chord: Chord, key: Key, octave: Octave }
 
@@ -26,13 +27,14 @@ export class ChordNoteController {
     holdChord: boolean = false
     arpMode: Arp.Mode = Arp.Mode.none
     arpSpeed: Arp.Speed = Arp.Speed.halfNote
+    arpLoop: boolean = false
 
-    private audioController: AudioController
+    private audioSynth: AudioSynth
     private playedChords: ChordKeyAndOctave[] = []
     private heldChord: ChordKeyAndOctave | null = null
 
-    constructor(audioController: AudioController) {
-        this.audioController = audioController
+    constructor(audioSynth: AudioSynth) {
+        this.audioSynth = audioSynth
     }
 
     pressChordNotes(chord: Chord, key: Key) {
@@ -64,16 +66,14 @@ export class ChordNoteController {
 
     private startPlaying(chordToPlay: ChordKeyAndOctave) {
         this.playedChords.push(chordToPlay)
-
         const notes = chordToPlay.chord.notes(chordToPlay.key, chordToPlay.octave)
-        this.audioController.press(notes.map(n => { return { note: n, instrument: Instrument.chord } }))
+        this.audioSynth.playNotes(notes, {mode: this.arpMode, speed: this.arpSpeed, loop: this.arpLoop})
     }
 
     private stopPlaying(chordToRelease: ChordKeyAndOctave) {
         this.playedChords = this.playedChords.filter(pc => { return pc !== chordToRelease })
         const notes = chordToRelease.chord.notes(chordToRelease.key, chordToRelease.octave)
-
-        this.audioController.release(notes.map(n => { return { note: n, instrument: Instrument.chord } }))
+        this.audioSynth.releaseNotes(notes)
     }
 
     get controls(): ControlBoard {
@@ -86,21 +86,22 @@ export class ChordNoteController {
                     new ToggleControlWidget(this, 'holdChord', 'Hold'),
                 ]),
 
-                new ContRangeControlWidget(Tone.Transport.bpm, 'value', 'BPM', 40, 200, 1),
+                new ContRangeControlWidget(Tone.Transport.bpm, 'value', 'BPM', 60, 140, 1),
                 new ContainerControlWidget('ARP', ContainerArrangement.horizontal, [
-                    new DiscRangeControlWidget(this, 'arpMode', 'Pattern', [Arp.Mode.none, Arp.Mode.arpUp, Arp.Mode.arpDown]),
-                    new DiscRangeControlWidget(this, 'arpSpeed', 'Speed', [Arp.Speed.wholeNote, Arp.Speed.halfNote, Arp.Speed.quarterNote, Arp.Speed.eighthNote, Arp.Speed.sixteenNote])
+                    new DiscRangeControlWidget(this, 'arpMode', 'Pattern', [Arp.Mode.none, Arp.Mode.arpUp, Arp.Mode.arpDown, Arp.Mode.arpUpDown, Arp.Mode.arpDownUp]),
+                    new DiscRangeControlWidget(this, 'arpSpeed', 'Speed', [Arp.Speed.wholeNote, Arp.Speed.halfNote, Arp.Speed.quarterNote, Arp.Speed.eighthNote, Arp.Speed.sixteenthNote]),
+                    new ToggleControlWidget(this, 'arpLoop', 'Loop')
                 ]),
 
             ]),
             new ContainerControlWidget('Oscillators', ContainerArrangement.vertical, [
-                new ContRangeControlWidget(this.audioController.chordSynth, 'triangleSineFade', 'Osc. 1 - Tri <-> Sine', 0, 1, 0.05),
-                new ContRangeControlWidget(this.audioController.chordSynth, 'squareWidth', 'Osc. 2 - Square Pulse Width', 0, 0.99, 0.05),
-                new ContRangeControlWidget(this.audioController.chordSynth, 'squareFade', 'Osc. Mix', 0, 1, 0.05),
+                new ContRangeControlWidget(this.audioSynth, 'triangleSineFade', 'Osc. 1 - Tri <-> Sine', 0, 1, 0.05),
+                new ContRangeControlWidget(this.audioSynth, 'squareWidth', 'Osc. 2 - Square Pulse Width', 0, 0.99, 0.05),
+                new ContRangeControlWidget(this.audioSynth, 'squareFade', 'Osc. Mix', 0, 1, 0.05),
             ]),
             new ContainerControlWidget('Vibrato', ContainerArrangement.vertical, [
-                new ContRangeControlWidget(this.audioController.chordSynth, 'vibratoDepth', 'Depth', 0, 1, 0.05),
-                new ContRangeControlWidget(this.audioController.chordSynth, 'vibratoFreq', 'Frequency', 0, 20, 1),
+                new ContRangeControlWidget(this.audioSynth, 'vibratoDepth', 'Depth', 0, 1, 0.05),
+                new ContRangeControlWidget(this.audioSynth, 'vibratoFreq', 'Frequency', 0, 20, 1),
 
             ])
         ]))

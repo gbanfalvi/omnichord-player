@@ -37,7 +37,7 @@
                 &.vertical {
                     display: flex;
                     flex-flow: column nowrap;
-
+                    padding: 0 10px;
                     & > *:not(:first-child) {
                         margin-top: 8px;
                     }
