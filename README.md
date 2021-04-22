@@ -57,13 +57,14 @@ Builds the whole thing into `./dev`.
 ## Codebase Structure
 Nothing very good lol I'm not a web developer.
  
-- `/controllers` - Has key classes that do some form of computation away from the UI layer.
-- `/models` - Key app data structures. 
-- `/view-models` - Contain business logic and/or state that's between the views and controllers.
-- `/views` - The (p)react app itself. 
-    - `/App.tsx` - Root component for the application.
 - `/index.html` - Main app entrypoint.
-- `/index.tsx` - Renders the app component.
+- `/src` - Contains the actual app code.
+    - `/index.tsx` - Renders the app component.
+    - `/controllers` - Has key classes that do some form of computation away from the UI layer.
+    - `/models` - Key app data structures. 
+    - `/view-models` - Contain business logic and/or state that's between the views and controllers.
+    - `/views` - The (p)react app itself. 
+        - `/App.tsx` - Root component for the application.
 
 ## Project Checklist
 
@@ -105,3 +106,8 @@ Nothing very good lol I'm not a web developer.
         - [ ] Reverb
         - [ ] Master volume
     - [ ] Persist settings in local storage.
+
+### Other TODOs
+
+- Clean us SCSS (e.g. reuse button stylings between chordboard and controls).
+- Move chord selection logic and playback to view model.
