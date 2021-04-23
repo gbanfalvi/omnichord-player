@@ -105,6 +105,7 @@ export class ChordBoardViewModel {
     }
 
     onKeyPress(keyCode: KeyCode) {
+        console.log(this, this._playState)
         if (this._playState === null) {
             // Initial key down
             const chord = chordAndRowsForRows([keyCode.row], chordsAndRows)

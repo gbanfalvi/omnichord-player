@@ -11,8 +11,11 @@ interface AbstractWidgetProps {
 }
 
 export function AbstractWidget(props: AbstractWidgetProps) {
-    return <div className='AbstractWidget'>
-        <div className='Specialized'>
+
+    const isContainer = isContainerWidget(props.widget)
+
+    return <div className={`AbstractWidget ${isContainer ? 'container' : 'control'}`}>
+        <div className={`Specialized ${isContainer ? 'container' : 'control'}`}>
             {isContainerWidget(props.widget) &&
                 <ContainerWidget containerWidget={props.widget} />
             }
@@ -30,7 +33,7 @@ export function AbstractWidget(props: AbstractWidgetProps) {
             }
         </div>
         {props.widget.title !== null &&
-            <div className='WidgetLabel'>{props.widget.title}</div>
+            <div className={`WidgetLabel ${isContainer ? 'container' : 'control'}`}>{props.widget.title}</div>
         }
     </div>
 }

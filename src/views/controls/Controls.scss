@@ -21,6 +21,13 @@
             padding: 2px;
             flex-grow: 1;
                 
+            &.control {
+                background-color: rgb(220, 220, 220);
+                padding: 10px 8px;
+                border-radius: 4px;
+            }
+
+
             .ContainerWidget {
                 display: flex;
                 
@@ -148,6 +155,16 @@
                 padding-top: 2px;
                 border-top: solid 1px rgba(0, 0, 0, 0.1);
                 text-align: center;
+
+                &.control {
+                    border-top: none;
+                    padding-top: none;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    font-size: 11px;
+
+
+                }
             }
         }
     }

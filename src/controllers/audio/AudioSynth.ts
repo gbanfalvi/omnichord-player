@@ -1,5 +1,6 @@
 import * as Tone from 'tone'
 import { PulseOscillatorOptions } from 'tone'
+import { RecursivePartial } from 'tone/build/esm/core/util/Interface'
 import { Arp } from '../../models/music/Arp'
 import { Note } from '../../models/music/Note'
 
@@ -8,6 +9,13 @@ export type ArpConfiguration = {
     speed: Arp.Speed,
     loop: boolean
 }
+
+const envelope: RecursivePartial<Omit<Tone.EnvelopeOptions, 'context'>> = {
+    attack: 0.035, attackCurve: 'linear',
+    decay: 0.01, decayCurve: 'exponential',
+    sustain: 0.3,
+    release: 0.8, releaseCurve: 'exponential'
+};
 
 /**
  * AudioSynth
@@ -26,39 +34,22 @@ export class AudioSynth {
 
     private _sineSynth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: 'sine' },
-        envelope: {
-            attack: 0.02, attackCurve: 'linear',
-            decay: 0.1, decayCurve: 'exponential',
-            sustain: 0.5,
-            release: 0.5, releaseCurve: 'exponential'
-        },
-        volume: -8
+        envelope: envelope,
+        volume: -4
     })
 
     private _triangleSynth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: 'triangle' },
-        envelope: {
-            attack: 0.01, attackCurve: 'linear',
-            decay: 0.1, decayCurve: 'exponential',
-            sustain: 0.2,
-            release: 0.5, releaseCurve: 'exponential'
-        },
+        envelope: envelope,
     })
 
     private _triangleSineCrossfade = new Tone.CrossFade()
 
-    private _squareSynth = new Tone.PolySynth(Tone.Synth,
-        {
-            oscillator: { type: "pulse", width: 0 },
-            envelope: {
-                attack: 0.05, attackCurve: 'linear',
-                decay: 0.1, decayCurve: 'exponential',
-                sustain: 0.2,
-                release: 0.5, releaseCurve: 'exponential'
-            },
-            volume: -16
-
-        })
+    private _squareSynth = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "pulse", width: 0 },
+        envelope: envelope,
+        volume: -16
+    })
 
     private _squareCrossfade = new Tone.CrossFade()
 

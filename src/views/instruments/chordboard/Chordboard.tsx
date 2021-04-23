@@ -48,8 +48,8 @@ export function Chordboard(props: ChordboardProps) {
             return <BoardButton
                 keyCode={ck} key={idx}
                 isPressed={viewModelRef.current.playState != null ? (viewModelRef.current.playState.keyCol === ck.col && viewModelRef.current.playState.chordRows.includes(ck.row)) : false}
-                onPress={viewModelRef.current.onKeyPress}
-                onRelease={viewModelRef.current.onKeyRelease} />
+                onPress={(k: KeyCode)=>{viewModelRef.current.onKeyPress(k)}}
+                onRelease={(k: KeyCode)=>{viewModelRef.current.onKeyRelease(k)}} />
         })}
     </div>
 }
