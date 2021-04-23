@@ -1,5 +1,6 @@
 import { h } from 'preact'
-import { KeyAndCol } from '../Chordboard'
+import { KeyAndCol } from '../../../../view-models/instruments/chordboard/ChordBoardViewModel'
+
 
 interface KeyLabelProps {
     keyAndCol: KeyAndCol

@@ -74,7 +74,6 @@ Nothing very good lol I'm not a web developer.
     - [x] Key labels.
     - [x] Chord labels.
     - [x] Keyboard input.
-        - [ ] It's a bit hacky, make it smoother (e.g. move note calculation out of the render cycle).
     - [x] Mouse input.
     - [x] Combine chord buttons from different rows.
         - [ ] Make it smoother (one chord stops ebefore playing the next one).
@@ -99,6 +98,7 @@ Nothing very good lol I'm not a web developer.
         - [x] Different speeds.
             - [ ] Get it to change live.
         - [x] Loop
+        - [ ] Replace arp sequency in-place on chord changes.
     - [x] Mixed synthesizer. 
         - [x] Sine-Triangle Mix
         - [x] Square w/ PWM
@@ -110,4 +110,4 @@ Nothing very good lol I'm not a web developer.
 ### Other TODOs
 
 - Clean us SCSS (e.g. reuse button stylings between chordboard and controls).
-- Move chord selection logic and playback to view model.
+

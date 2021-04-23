@@ -1,5 +1,5 @@
 import { h } from 'preact'
-import { ChordRowsAndCols } from '../Chordboard'
+import { ChordRowsAndCols } from '../../../../view-models/instruments/chordboard/ChordBoardViewModel'
 
 interface ChordLabelProps {
     chordsRowsAndCol: ChordRowsAndCols
